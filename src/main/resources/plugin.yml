@@ -1,0 +1,10 @@
+name: VortexAttributes
+version: '${project.version}'
+main: gemesil.vortexattributes.VortexAttributes
+api-version: 1.19
+authors: [ Gemesil ]
+description: Adds attributes to the game like speed strength and more
+commands:
+  setAttr:
+    description: Set an attribute
+    usage: "Usage: /<command> player_name attribute_name attribute_level"
