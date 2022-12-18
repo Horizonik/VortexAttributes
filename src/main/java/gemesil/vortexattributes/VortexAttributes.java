@@ -26,8 +26,6 @@ public final class VortexAttributes extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Load our config file (Or create one if it doesn't exist)
-        FileConfiguration config = StatsManager.loadConfig("config.yml");
 
         // Register events
         Bukkit.getServer().getPluginManager().registerEvents(new StatsEvents(), this);
@@ -40,7 +38,7 @@ public final class VortexAttributes extends JavaPlugin {
 
         // Start updating player's actionbars
         task = new ActionBarTask();
-        task.runTaskTimer(this, 0, 20); // Run the task every 5 seconds (100 ticks)
+        task.runTaskTimer(this, 0, 20); // Run the task every 1 seconds (20 ticks)
     }
 
     @Override

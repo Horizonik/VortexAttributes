@@ -1,5 +1,6 @@
 package gemesil.vortexattributes.stats;
 
+import gemesil.vortexattributes.VortexAttributes;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -11,24 +12,60 @@ import java.io.IOException;
 
 public class StatsManager {
 
+    private static void doesDataFolderExist() {
+
+        File dataFolder = VortexAttributes.getPlugin().getDataFolder();
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
+    }
+
+    @NonNull
+    private static File getPlayerFile(Player player) {
+
+        // If it doesn't exist, creates one
+        doesDataFolderExist();
+
+        File file = new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml");
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            FileConfiguration playerFile = loadPlayerStats(player);
+
+            // Set base stats
+            playerFile.set("health", 20);
+            playerFile.set("armor",1);
+            playerFile.set("strength",1);
+
+            // Save the new change to the config file
+            try {
+                playerFile.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+            }
+
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return file;
+    }
+
     @NonNull
     private static FileConfiguration loadPlayerStats(Player player) {
-        File file = new File(player.getWorld().getName(), player.getUniqueId() + ".yml");
 
-        // Check if file is not found
-        if (!file.exists()) {
-            // Return default configuration
-            return new YamlConfiguration();
-        }
-
-        // Assuming it was found, load its configuration
+        // Load configuration from file
         try {
-            // Load configuration from file
-            return YamlConfiguration.loadConfiguration(file);
+            return YamlConfiguration.loadConfiguration(getPlayerFile(player));
         }
-
         // Error loading file
         catch (Exception e) {
+
             // Return default configuration
             return new YamlConfiguration();
         }
@@ -37,27 +74,10 @@ public class StatsManager {
     // Utils
     public static boolean containsPlayer(Player player) {
 
-        FileConfiguration stats = StatsManager.loadPlayerStats(player);
+        FileConfiguration stats = loadPlayerStats(player);
 
         // Check if player has base stats
         return stats.contains("health") || stats.contains("strength") || stats.contains("armor");
-    }
-
-    public static FileConfiguration loadConfig(String filePath) {
-        File file = new File(filePath);
-
-        if (!file.exists()) {
-
-            // File not found, create a new file
-            try {
-                file.createNewFile();
-            }
-
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return YamlConfiguration.loadConfiguration(file);
     }
 
     // Gets & Sets
@@ -67,7 +87,7 @@ public class StatsManager {
 
         // Save the new change to the config file
         try {
-            stats.save(new File(player.getWorld().getName(), player.getUniqueId() + ".yml"));
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
         }
 
         catch (IOException e) {
@@ -85,7 +105,7 @@ public class StatsManager {
 
         // Save the new change to the config file
         try {
-            stats.save(new File(player.getWorld().getName(), player.getUniqueId() + ".yml"));
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
         }
 
         catch (IOException e) {
@@ -103,7 +123,7 @@ public class StatsManager {
 
         // Save the new change to the config file
         try {
-            stats.save(new File(player.getWorld().getName(), player.getUniqueId() + ".yml"));
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
         }
 
         catch (IOException e) {
