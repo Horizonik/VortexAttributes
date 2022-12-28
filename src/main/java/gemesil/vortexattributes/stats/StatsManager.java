@@ -12,6 +12,10 @@ import java.io.IOException;
 
 public class StatsManager {
 
+    final int MAX_HEALTH_LEVEL = 100;
+    final int MAX_ARMOR_LEVEL = 100;
+    final int MAX_STRENGTH_LEVEL = 100;
+
     private static void doesDataFolderExist() {
 
         File dataFolder = VortexAttributes.getPlugin().getDataFolder();
@@ -42,6 +46,9 @@ public class StatsManager {
             playerFile.set("health", 20);
             playerFile.set("armor",1);
             playerFile.set("strength",1);
+            playerFile.set("healthXP",0);
+            playerFile.set("armorXP",0);
+            playerFile.set("strengthXP",0);
 
             // Save the new change to the config file
             try {
@@ -71,6 +78,8 @@ public class StatsManager {
         }
     }
 
+
+
     // Utils
     public static boolean containsPlayer(Player player) {
 
@@ -78,6 +87,20 @@ public class StatsManager {
 
         // Check if player has base stats
         return stats.contains("health") || stats.contains("strength") || stats.contains("armor");
+    }
+
+    // Check if a skill exists
+    public static boolean doesSkillExist(String skillName) {
+        String[] skills = {"health", "strength", "armor"};
+
+        // Check if given skill is in our existing skills array
+        for (String skill : skills) {
+            if (skill.equalsIgnoreCase(skillName))
+                return true;
+        }
+
+        // Skill doesn't exist, return false!
+        return false;
     }
 
     // Gets & Sets
@@ -134,4 +157,125 @@ public class StatsManager {
         FileConfiguration stats = loadPlayerStats(player);
         return stats.getInt("health");
     }
+
+    public static void setSkill(Player player, String skillName, Integer level) {
+        FileConfiguration stats = loadPlayerStats(player);
+        stats.set(skillName, level);
+
+        // Save the new change to the config file
+        try {
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static Integer getSkill(Player player, String skillName) {
+        FileConfiguration stats = loadPlayerStats(player);
+        return stats.getInt(skillName);
+    }
+
+    public static void setSkillXP(Player player, String skillName, Integer level) {
+        FileConfiguration stats = loadPlayerStats(player);
+        stats.set(skillName + "XP", level);
+
+        // Save the new change to the config file
+        try {
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Integer getSkillXP(Player player, String skillName) {
+        FileConfiguration stats = loadPlayerStats(player);
+        return stats.getInt(skillName + "XP");
+    }
+
+    public static void updateSkillXP(Player player, String skillName, Integer xp) {
+        FileConfiguration stats = loadPlayerStats(player);
+        stats.set(skillName + "XP", stats.getInt(skillName + "XP") + xp);
+
+        // Save the new change to the config file
+        try {
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateSkill(Player player, String skillName, Integer level) {
+        FileConfiguration stats = loadPlayerStats(player);
+        stats.set(skillName, stats.getInt(skillName) + level);
+
+        // Save the new change to the config file
+        try {
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // XP per every skill
+    public static void setStrengthXP(Player player, Integer xp) {
+        FileConfiguration stats = loadPlayerStats(player);
+        stats.set("strengthXP",xp);
+
+        // Save the new change to the config file
+        try {
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static Integer getStrengthXP(Player player) {
+        FileConfiguration stats = loadPlayerStats(player);
+        return stats.getInt("strengthXP");
+    }
+
+    public static void setHealthXP(Player player, Integer xp) {
+        FileConfiguration stats = loadPlayerStats(player);
+        stats.set("healthXP",xp);
+
+        // Save the new change to the config file
+        try {
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static Integer getHealthXP(Player player) {
+        FileConfiguration stats = loadPlayerStats(player);
+        return stats.getInt("healthXP");
+    }
+
+    public static void setArmorXP(Player player, Integer xp) {
+        FileConfiguration stats = loadPlayerStats(player);
+        stats.set("armorXP",xp);
+
+        // Save the new change to the config file
+        try {
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static Integer getArmorXP(Player player) {
+        FileConfiguration stats = loadPlayerStats(player);
+        return stats.getInt("armorXP");
+    }
+
 }

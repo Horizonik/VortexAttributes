@@ -8,3 +8,13 @@ commands:
   setAttr:
     description: Set an attribute
     usage: "Usage: /<command> player_name attribute_name attribute_level"
+    alias:
+      - sa
+      - setAttrs
+
+  sendLevels:
+    description: Send some of your levels to to other players
+    usage: "Usage: /<command> player_name health/strength/armor levels_amount"
+    alias:
+      - sl
+      - sendLevel

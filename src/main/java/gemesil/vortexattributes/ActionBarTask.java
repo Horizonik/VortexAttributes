@@ -31,15 +31,18 @@ public class ActionBarTask extends BukkitRunnable {
 
             // Set new max health of player
             healthAttr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            healthAttr.setBaseValue(StatsManager.getHealth(player));
+            assert healthAttr != null;
+            healthAttr.setBaseValue(Math.max(StatsManager.getHealth(player) / 5, 0));
 
             // Set new strength of player
             strengthAttr = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
-            strengthAttr.setBaseValue(StatsManager.getStrength(player));
+            assert strengthAttr != null;
+            strengthAttr.setBaseValue(Math.max(StatsManager.getStrength(player) / 10, 0));
 
             // Set new armor of player
             armorAttr = player.getAttribute(Attribute.GENERIC_ARMOR);
-            armorAttr.setBaseValue(StatsManager.getArmor(player));
+            assert armorAttr != null;
+            armorAttr.setBaseValue(Math.max(StatsManager.getArmor(player), 0));
         }
     }
 }

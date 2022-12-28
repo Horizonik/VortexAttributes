@@ -8,8 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SetAttr implements CommandExecutor {
-
+public class SendLevels implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -22,12 +21,13 @@ public class SetAttr implements CommandExecutor {
         Player p = (Player) sender;
 
         // Check if player has permission for command
-        if (!p.hasPermission("setAttr.use_command")) {
+        if (!p.hasPermission("sendLevels.use_command")) {
             VortexAttributes.getVortexLogger().sendNoPermsMsg(p);
             return true;
         }
 
         // If player, attr type and value were entered
+        // Command in this format: /sendlevels player-name skill amount
         if (args.length > 2) {
 
             // Check if player is online
@@ -53,28 +53,29 @@ public class SetAttr implements CommandExecutor {
                 return true;
             }
 
-            // Check what type of attribute was requested in the command
-            switch (args[1]) {
+            // Check if the given skill actually exists in the db
+            if (StatsManager.doesSkillExist(args[1])) {
 
-                case "health":
-                    StatsManager.setHealth(targetPlayer, Integer.parseInt(args[2]));
-                    break;
+                // Does the player have enough levels to give away?
+                if (StatsManager.getSkill(p, args[1]) >= Integer.parseInt(args[2])) {
 
-                case "strength":
-                    StatsManager.setStrength(targetPlayer, Integer.parseInt(args[2]));
-                    break;
+                    // Send the levels to the target player
+                    StatsManager.setSkill(targetPlayer, args[1], Integer.parseInt(args[2]));
 
-                case "armor":
-                    StatsManager.setArmor(targetPlayer, Integer.parseInt(args[2]));
-                    break;
-
-                default:
-                    VortexAttributes.getVortexLogger().sendChat(p, args[1] + " is not a valid attribute!", true);
-                    return true;
+                    // Remove the levels from the command sender
+                    StatsManager.setSkill(p, args[1], StatsManager.getSkill(p, args[1]) - Integer.parseInt(args[2]));
+                }
             }
 
-            VortexAttributes.getVortexLogger().sendChat(p, "Successfully set " + args[1] + " of player " + targetPlayer.getName() + " to " + args[2] + ".", true);
-            VortexAttributes.getVortexLogger().sendChat(targetPlayer, "Attribute " + args[1] + " has been set to " + args[2] + ".", true);
+            // The skill name that was entered is not of a real skill
+            else
+                VortexAttributes.getVortexLogger().sendChat(p, args[1] + " is not a valid attribute!", true);
+
+            // Send prompt to command sender
+            VortexAttributes.getVortexLogger().sendChat(p, "Successfully sent "  + args[2] + " " + args[1] + " levels to player " + targetPlayer.getName() + ".", true);
+
+            // Send prompt to the target player
+            VortexAttributes.getVortexLogger().sendChat(targetPlayer, "Received " + args[2] + " " + args[1] + " levels from " + p.getName() + ".", true);
 
             return true;
         }
