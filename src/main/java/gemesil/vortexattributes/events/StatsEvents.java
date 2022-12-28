@@ -58,6 +58,9 @@ public class StatsEvents implements Listener {
             // Award those 20% to the killer
             StatsManager.setSkill(killerPlayer, skill, Math.max(StatsManager.getSkill(killerPlayer, skill) + twentyPercent, 0));
         }
+
+        // Improve the strength skill xp by 5 for every kill
+        StatsManager.updateSkillXP(killerPlayer, "strength", 5);
     }
 
     @EventHandler

@@ -8,13 +8,21 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 
 public class StatsManager {
 
-    final int MAX_HEALTH_LEVEL = 100;
-    final int MAX_ARMOR_LEVEL = 100;
-    final int MAX_STRENGTH_LEVEL = 100;
+    // Dictionary that contains the max level for every skill
+    private static final HashMap<String, Integer> max_levels = new HashMap<String, Integer>() {{
+
+        put("health", 100);
+        put("strength", 100);
+        put("armor", 500);
+    }};
+
+    // how much xp for one level?
+    private final int LEVEL_EXP_COST = 100;
 
     private static void doesDataFolderExist() {
 
@@ -106,7 +114,18 @@ public class StatsManager {
     // Gets & Sets
     public static void setStrength(Player player, Integer strength) {
         FileConfiguration stats = loadPlayerStats(player);
-        stats.set("strength",strength);
+
+        // Is the player already on the max level?
+        if (!(getStrength(player) + strength > max_levels.get("strength")))
+
+            // The player is under the max level, just normally set their skill level
+            stats.set("strength",strength);
+
+        // The player will go over the max level, but is not in the max level now.
+        else if (!getStrength(player).equals(max_levels.get("strength")))
+
+            // set the value to max level.
+            stats.set("strength", max_levels.get("strength"));
 
         // Save the new change to the config file
         try {
