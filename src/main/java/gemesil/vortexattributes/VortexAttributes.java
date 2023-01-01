@@ -32,8 +32,8 @@ public final class VortexAttributes extends JavaPlugin {
 
         // Register commands to the plugin
         Objects.requireNonNull(getCommand("attrSet")).setExecutor(new SetAttr());
-        Objects.requireNonNull(getCommand("attrStatus")).setExecutor(new SendLevels());
-        Objects.requireNonNull(getCommand("sendLevels")).setExecutor(new AttrStatus());
+        Objects.requireNonNull(getCommand("attrStatus")).setExecutor(new AttrStatus());
+        Objects.requireNonNull(getCommand("sendLevels")).setExecutor(new SendLevels());
 
         // Start updating player's actionbars
         task = new ActionBarTask();

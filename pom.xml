@@ -40,7 +40,7 @@
                         </goals>
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputFile>C:\Users\ofeky\Desktop\test-server\plugins\VortexAttributes.jar</outputFile>
+                            <outputFile>/mnt/mcPlugins/TestServer/plugins/VortexAttributes.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>

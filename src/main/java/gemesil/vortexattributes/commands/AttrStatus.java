@@ -34,8 +34,7 @@ public class AttrStatus implements CommandExecutor {
         final String[] skills = {"health", "strength", "armor"};
 
         // Print stat of skills screen
-        VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("================"), false);
-        VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("Skills Status"), false);
+        VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("______________________________________________"), false);
         VortexAttributes.getVortexLogger().sendChat(p, "", false);
 
         // Go over all skills, print each of their values in chat
@@ -52,7 +51,7 @@ public class AttrStatus implements CommandExecutor {
         }
 
         // Print end of skills screen
-        VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("================"));
+        VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("______________________________________________"));
 
         return true;
     }
