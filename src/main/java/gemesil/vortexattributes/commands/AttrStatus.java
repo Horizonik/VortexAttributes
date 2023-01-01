@@ -2,16 +2,19 @@ package gemesil.vortexattributes.commands;
 
 import gemesil.vortexattributes.VortexAttributes;
 import gemesil.vortexattributes.stats.StatsManager;
-import gemesil.vortexlogger.VortexLogger;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import static gemesil.vortexattributes.stats.StatsManager.LEVEL_EXP_COST;
 
 public class AttrStatus implements CommandExecutor {
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
 
         // Check if the executor is not a player
         if (!(sender instanceof Player)) {
@@ -28,10 +31,12 @@ public class AttrStatus implements CommandExecutor {
         }
 
         // Skill names
-        String[] skills = {"health", "strength", "armor"};
+        final String[] skills = {"health", "strength", "armor"};
 
-        VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("================"));
-        VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("Skills Status"));
+        // Print stat of skills screen
+        VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("================"), false);
+        VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("Skills Status"), false);
+        VortexAttributes.getVortexLogger().sendChat(p, "", false);
 
         // Go over all skills, print each of their values in chat
         for (String skill : skills) {
@@ -40,12 +45,13 @@ public class AttrStatus implements CommandExecutor {
             VortexAttributes.getVortexLogger().sendChat(p, skill.substring(0, 1).toUpperCase() + skill.substring(1) + " is level " + StatsManager.getSkill(p, skill) + ",", true);
 
             // Show current xp of skill
-            VortexAttributes.getVortexLogger().sendChat(p, "with " + StatsManager.getSkillXP(p, skill) + " current XP.", true);
+            VortexAttributes.getVortexLogger().sendChat(p, "with " + StatsManager.getSkillXP(p, skill) + "/" + LEVEL_EXP_COST + " current XP.", true);
 
-            // TODO
-            // Show how much xp is left until the next level
+            // Print empty line to separate fields
+            VortexAttributes.getVortexLogger().sendChat(p, "", false);
         }
 
+        // Print end of skills screen
         VortexAttributes.getVortexLogger().sendChat(p, VortexAttributes.getVortexLogger().centerMessage("================"));
 
         return true;

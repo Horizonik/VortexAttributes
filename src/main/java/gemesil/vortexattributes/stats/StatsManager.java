@@ -22,7 +22,9 @@ public class StatsManager {
     }};
 
     // how much xp for one level?
-    private final int LEVEL_EXP_COST = 100;
+    public static final int LEVEL_EXP_COST = 100;
+
+    private static final String[] skills = {"health", "strength", "armor"};
 
     private static void doesDataFolderExist() {
 
@@ -86,19 +88,40 @@ public class StatsManager {
         }
     }
 
+    // ==========================================================
 
-
-    // Utils
-    public static boolean containsPlayer(Player player) {
+    public static void ResetSkills(Player player) {
 
         FileConfiguration stats = loadPlayerStats(player);
 
-        // Check if player has base stats
-        return stats.contains("health") || stats.contains("strength") || stats.contains("armor");
+        // Go over all skill names
+        for (String skill : skills) {
+
+            // Set skill level to 1
+            stats.set(skill, 1);
+
+            // Set skill XP level to 0
+            stats.set(skill + "XP", 0);
+        }
+    }
+
+    public static boolean IsMissingSkills(Player player) {
+
+        FileConfiguration stats = loadPlayerStats(player);
+
+        // Go over all skill names
+        for (String skill : skills) {
+
+            // If a skill isn't in the player's file -> return true
+            if (!stats.contains(skill)) return true;
+        }
+
+        // Otherwise, all skills are present -> return false
+        return false;
     }
 
     // Check if a skill exists
-    public static boolean doesSkillExist(String skillName) {
+    public static boolean skillExists(String skillName) {
         String[] skills = {"health", "strength", "armor"};
 
         // Check if given skill is in our existing skills array
@@ -111,93 +134,70 @@ public class StatsManager {
         return false;
     }
 
-    // Gets & Sets
-    public static void setStrength(Player player, Integer strength) {
-        FileConfiguration stats = loadPlayerStats(player);
+    // Returns true if the player is gonna go over the max level
+    private static boolean isGoingOverMaxLevel(Player player, String skillName, int level) {
 
-        // Is the player already on the max level?
-        if (!(getStrength(player) + strength > max_levels.get("strength")))
-
-            // The player is under the max level, just normally set their skill level
-            stats.set("strength",strength);
-
-        // The player will go over the max level, but is not in the max level now.
-        else if (!getStrength(player).equals(max_levels.get("strength")))
-
-            // set the value to max level.
-            stats.set("strength", max_levels.get("strength"));
-
-        // Save the new change to the config file
-        try {
-            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
-        }
-
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static Integer getStrength(Player player) {
-        FileConfiguration stats = loadPlayerStats(player);
-        return stats.getInt("strength");
+        // Will the player go over the max level with the additional levels?
+        return (getSkill(player, skillName) + level) > max_levels.get(skillName);
     }
 
-    public static void setArmor(Player player, Integer armor) {
-        FileConfiguration stats = loadPlayerStats(player);
-        stats.set("armor",armor);
+    // Returns true if the player is already on max level
+    private static boolean isMaxLevel(Player player, String skillName) {
 
-        // Save the new change to the config file
-        try {
-            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
-        }
-
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static Integer getArmor(Player player) {
-        FileConfiguration stats = loadPlayerStats(player);
-        return stats.getInt("armor");
+        // Is the player's skill already maxed out?
+        return getSkill(player, skillName).equals(max_levels.get(skillName));
     }
 
-    public static void setHealth(Player player, Integer health) {
-        FileConfiguration stats = loadPlayerStats(player);
-        stats.set("health",health);
+    // If the player's xp is above the limit, level them up and reset the xp
+    // If not, dont do anything
+    private static void levelUp(Player player, String skillName, int xp) {
 
-        // Save the new change to the config file
-        try {
-            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
-        }
+        int currentXp = xp;
 
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static Integer getHealth(Player player) {
-        FileConfiguration stats = loadPlayerStats(player);
-        return stats.getInt("health");
-    }
+        // As long as the XP is above the requirements for a level
+        while ((getSkillXP(player, skillName) + currentXp) >= LEVEL_EXP_COST) {
 
-    public static void setSkill(Player player, String skillName, Integer level) {
-        FileConfiguration stats = loadPlayerStats(player);
-        stats.set(skillName, level);
+            // Level up the skill
+            updateSkill(player, skillName, 1);
 
-        // Save the new change to the config file
-        try {
-            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
-        }
+            // Reset xp for the skill
+            setSkillXP(player, skillName, (getSkillXP(player, skillName) + currentXp) - LEVEL_EXP_COST);
 
-        catch (IOException e) {
-            e.printStackTrace();
+            // How much xp is left
+            currentXp -= LEVEL_EXP_COST;
         }
     }
+
+    // ===========================================================================
+
+    // Skills
     public static Integer getSkill(Player player, String skillName) {
         FileConfiguration stats = loadPlayerStats(player);
         return stats.getInt(skillName);
     }
 
-    public static void setSkillXP(Player player, String skillName, Integer level) {
+    public static void setSkill(Player player, String skillName, Integer level) {
+
         FileConfiguration stats = loadPlayerStats(player);
-        stats.set(skillName + "XP", level);
+
+        // If the wrong skill name was given -> exit function
+        if (!skillExists(skillName)) return;
+
+        // If the player has maxed out the skill -> exit function
+        if (isMaxLevel(player, skillName)) return;
+
+        // If the player's level is going to go over the max level
+        if (isGoingOverMaxLevel(player, skillName, level)) {
+
+            // Set their level to the max
+            stats.set(skillName, max_levels.get(skillName));
+        }
+
+        else {
+
+            // Otherwise, set their level to what was given in the input
+            stats.set(skillName, level);
+        }
 
         // Save the new change to the config file
         try {
@@ -209,9 +209,42 @@ public class StatsManager {
         }
     }
 
+    public static void updateSkill(Player player, String skillName, Integer levelsToAdd) {
+        FileConfiguration stats = loadPlayerStats(player);
+        stats.set(skillName, stats.getInt(skillName) + levelsToAdd);
+
+        // Save the new change to the config file
+        try {
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // XP
     public static Integer getSkillXP(Player player, String skillName) {
         FileConfiguration stats = loadPlayerStats(player);
         return stats.getInt(skillName + "XP");
+    }
+
+    public static void setSkillXP(Player player, String skillName, Integer xp) {
+
+        FileConfiguration stats = loadPlayerStats(player);
+        stats.set(skillName + "XP", xp);
+
+        // Level up the skill if the xp exceeds the limit
+        levelUp(player, skillName, xp);
+
+        // Save the new change to the config file
+        try {
+            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
+        }
+
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void updateSkillXP(Player player, String skillName, Integer xp) {
@@ -227,74 +260,4 @@ public class StatsManager {
             e.printStackTrace();
         }
     }
-
-    public static void updateSkill(Player player, String skillName, Integer level) {
-        FileConfiguration stats = loadPlayerStats(player);
-        stats.set(skillName, stats.getInt(skillName) + level);
-
-        // Save the new change to the config file
-        try {
-            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
-        }
-
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // XP per every skill
-    public static void setStrengthXP(Player player, Integer xp) {
-        FileConfiguration stats = loadPlayerStats(player);
-        stats.set("strengthXP",xp);
-
-        // Save the new change to the config file
-        try {
-            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
-        }
-
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static Integer getStrengthXP(Player player) {
-        FileConfiguration stats = loadPlayerStats(player);
-        return stats.getInt("strengthXP");
-    }
-
-    public static void setHealthXP(Player player, Integer xp) {
-        FileConfiguration stats = loadPlayerStats(player);
-        stats.set("healthXP",xp);
-
-        // Save the new change to the config file
-        try {
-            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
-        }
-
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static Integer getHealthXP(Player player) {
-        FileConfiguration stats = loadPlayerStats(player);
-        return stats.getInt("healthXP");
-    }
-
-    public static void setArmorXP(Player player, Integer xp) {
-        FileConfiguration stats = loadPlayerStats(player);
-        stats.set("armorXP",xp);
-
-        // Save the new change to the config file
-        try {
-            stats.save(new File(VortexAttributes.getPlugin().getDataFolder(), player.getUniqueId() + ".yml"));
-        }
-
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static Integer getArmorXP(Player player) {
-        FileConfiguration stats = loadPlayerStats(player);
-        return stats.getInt("armorXP");
-    }
-
 }

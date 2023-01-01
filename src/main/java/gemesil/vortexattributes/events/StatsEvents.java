@@ -1,9 +1,6 @@
 package gemesil.vortexattributes.events;
 
-import com.google.common.math.Stats;
-import gemesil.vortexattributes.VortexAttributes;
 import gemesil.vortexattributes.stats.StatsManager;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,22 +9,20 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import static gemesil.vortexattributes.stats.StatsManager.IsMissingSkills;
+import static gemesil.vortexattributes.stats.StatsManager.ResetSkills;
+
 public class StatsEvents implements Listener {
 
-    // Apply buffs on first time join
+    // Apply skills on first time join
     @EventHandler
     public void onPlayerJoin (PlayerJoinEvent event) {
 
         Player player = event.getPlayer();
 
-//        // Check if the player is not in the stats database
-//        if (!StatsManager.containsPlayer(player)) {
-//
-//            // Set base stats
-//            StatsManager.setHealth(player, 20);
-//            StatsManager.setArmor(player, 1);
-//            StatsManager.setStrength(player, 1);
-//        }
+        // The player is missing skills from file -> supposedly first time join
+        if (IsMissingSkills(player))
+            ResetSkills(player);
     }
 
     // Leech levels when killing a player
@@ -35,9 +30,7 @@ public class StatsEvents implements Listener {
     public void onPlayerKill(final PlayerDeathEvent e) {
 
         // If the killer wasn't a player -> we don't do anything
-        if (!(e.getEntity().getKiller() instanceof Player)) {
-            return;
-        }
+        if (e.getEntity().getKiller() == null) return;
 
         // Save reference to killer and victim
         Player killerPlayer = e.getEntity().getKiller(); // the killer

@@ -1,27 +1,24 @@
 package gemesil.vortexattributes;
 
+import gemesil.vortexattributes.commands.AttrStatus;
+import gemesil.vortexattributes.commands.SendLevels;
 import gemesil.vortexattributes.commands.SetAttr;
 import gemesil.vortexattributes.events.StatsEvents;
-import gemesil.vortexattributes.stats.StatsManager;
 import gemesil.vortexlogger.VortexLogger;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Objects;
 
 public final class VortexAttributes extends JavaPlugin {
 
-    int sched;
+    // Declare task class reference
     ActionBarTask task;
 
-    // get custom logger plugin reference
+    // Get custom logger plugin reference
     private static final VortexLogger vortexLogger = (VortexLogger) Bukkit.getServer().getPluginManager().getPlugin("VortexLogger");
 
+    // Get plugin reference
     private static VortexAttributes plugin;
 
     @Override
@@ -34,8 +31,9 @@ public final class VortexAttributes extends JavaPlugin {
         plugin = this;
 
         // Register commands to the plugin
-        getCommand("setAttr").setExecutor(new SetAttr());
-        getCommand("sendLevels").setExecutor(new SetAttr());
+        Objects.requireNonNull(getCommand("attrSet")).setExecutor(new SetAttr());
+        Objects.requireNonNull(getCommand("attrStatus")).setExecutor(new SendLevels());
+        Objects.requireNonNull(getCommand("sendLevels")).setExecutor(new AttrStatus());
 
         // Start updating player's actionbars
         task = new ActionBarTask();

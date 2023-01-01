@@ -7,10 +7,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class SendLevels implements CommandExecutor {
+    @SuppressWarnings("NullableProblems")
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
 
         // Check if the executor is not a player
         if (!(sender instanceof Player)) {
@@ -54,7 +56,7 @@ public class SendLevels implements CommandExecutor {
             }
 
             // Check if the given skill actually exists in the db
-            if (StatsManager.doesSkillExist(args[1])) {
+            if (StatsManager.skillExists(args[1])) {
 
                 // Does the player have enough levels to give away?
                 if (StatsManager.getSkill(p, args[1]) >= Integer.parseInt(args[2])) {

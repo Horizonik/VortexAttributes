@@ -1,20 +1,28 @@
+#file: noinspection SpellCheckingInspection,SpellCheckingInspection
 name: VortexAttributes
 version: '${project.version}'
+# noinspection SpellCheckingInspection,SpellCheckingInspection
 main: gemesil.vortexattributes.VortexAttributes
 api-version: 1.19
+# noinspection SpellCheckingInspection
 authors: [ Gemesil ]
 description: Adds attributes to the game like speed strength and more
 commands:
-  setAttr:
+  attrSet:
     description: Set an attribute
     usage: "Usage: /<command> player_name attribute_name attribute_level"
     alias:
-      - sa
-      - setAttrs
+      - attrsSet
 
   sendLevels:
     description: Send some of your levels to to other players
     usage: "Usage: /<command> player_name health/strength/armor levels_amount"
     alias:
       - sl
-      - sendLevel
+
+  attrStatus:
+    description: See a status screen of your skill's xp and levels
+    usage: "Usage: /<command> player_name health/strength/armor levels_amount"
+    alias:
+      - attrStatus
+      - status

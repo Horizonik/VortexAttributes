@@ -1,17 +1,20 @@
 package gemesil.vortexattributes.commands;
 
 import gemesil.vortexattributes.VortexAttributes;
-import gemesil.vortexattributes.stats.StatsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
+
+import static gemesil.vortexattributes.stats.StatsManager.*;
 
 public class SetAttr implements CommandExecutor {
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
 
         // Check if the executor is not a player
         if (!(sender instanceof Player)) {
@@ -29,6 +32,13 @@ public class SetAttr implements CommandExecutor {
 
         // If player, attr type and value were entered
         if (args.length > 2) {
+
+            // If the skill name is invalid -> send error message and exit
+            if (!skillExists(args[1])) {
+
+                VortexAttributes.getVortexLogger().sendChat(p, args[1] + " is not a valid skill name!", true);
+                return true;
+            }
 
             // Check if player is online
             Player targetPlayer = null;
@@ -53,25 +63,8 @@ public class SetAttr implements CommandExecutor {
                 return true;
             }
 
-            // Check what type of attribute was requested in the command
-            switch (args[1]) {
-
-                case "health":
-                    StatsManager.setHealth(targetPlayer, Integer.parseInt(args[2]));
-                    break;
-
-                case "strength":
-                    StatsManager.setStrength(targetPlayer, Integer.parseInt(args[2]));
-                    break;
-
-                case "armor":
-                    StatsManager.setArmor(targetPlayer, Integer.parseInt(args[2]));
-                    break;
-
-                default:
-                    VortexAttributes.getVortexLogger().sendChat(p, args[1] + " is not a valid attribute!", true);
-                    return true;
-            }
+            // Set the skill to the requested amount
+            setSkill(targetPlayer, args[1], Integer.parseInt(args[2]));
 
             VortexAttributes.getVortexLogger().sendChat(p, "Successfully set " + args[1] + " of player " + targetPlayer.getName() + " to " + args[2] + ".", true);
             VortexAttributes.getVortexLogger().sendChat(targetPlayer, "Attribute " + args[1] + " has been set to " + args[2] + ".", true);
