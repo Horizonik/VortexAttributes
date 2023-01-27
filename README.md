@@ -1,4 +1,4 @@
-## What is it exactly?
+# What is it exactly?
 **VortexAttributes** is a Minecraft 1.19.2 plugin coded by Ofek Buchnik, it attributes for every player such as strength, armor and health (similar to the leveling systems like Hypixel Skyblock).
 
 The stats are displayed on the player's hotbar (above the on-screen inventory slots).
@@ -10,7 +10,7 @@ There are currently 3 stats (with the option to easily add new skills):
 #### Why I am making this public
 This was a passion side project, due to a lack of time I don't think I'll ever fully finish it and I want the code to be available and see what other people do with it :)
 
-### Code
+## Code
 #### File Storage
 Currently each new player that logs into your server is assigned a stats file that is stored under Plugins/VortexAttributes. 
 The stat file is then loaded when the player's stats need to be updated. Stat files only work with UUIDs, to prevent players from losing their skills on every name change.
@@ -26,13 +26,13 @@ For this purpose I have implemented an EventListener under Events/StatsEvents.ja
 Currently the only implementations of vanilla leveling is for the Strength skill, just due to a lack of time on my end :)
 
 
-### Commands
+## Commands
 The plugins has two commands available:
 /attrSet [player_name] [attribute_name] [attribute_level] - Set the level of a player's skill. (Requires permission "setAttr.use_command")
 /sendLevels player_name health/strength/armor levels_amount - Send some of your hard-earned levels to another player. (Requires permission "sendLevels.use_command")
 /attrStatus - Shows your levels, how much xp is needed for a level up and your general attribute stats. (Requires permission "attrStatus.use_command")
 
-### Current Limitations
+## Current Limitations
 - Currently, the only level that players can level up is Strength (by killing other players). 
 The health and armor attribute implementations don't have a vanilla way of leveling up just yet.
 
