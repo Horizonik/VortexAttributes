@@ -39,3 +39,6 @@ The health and armor attribute implementations don't have a vanilla way of level
 
 - The plugin was only tested in a server with up to 3 players concurrently and did not cause any extra lag. 
 Due to the aforementioned hotbar limitation, the plugin iterates through all online players every few seconds and updates the text on their hotbar, which could cause some lag.
+
+## Dependencies
+The plugin uses another plugin I made that handles plugin-to-player messages like hotbar pop ups or chat notifications. You can download VortexLogger here.
