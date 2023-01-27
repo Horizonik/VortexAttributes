@@ -1,5 +1,5 @@
 # What is it exactly?
-**VortexAttributes** is a Minecraft 1.19.2 plugin coded by Ofek Buchnik, it attributes for every player such as strength, armor and health (similar to the leveling systems like Hypixel Skyblock).
+**VortexAttributes** is a Minecraft 1.19.2 plugin coded by Ofek Buchnik, it adds attributes for every player such as strength, armor and health (similar to the leveling systems like Hypixel Skyblock).
 
 The stats are displayed on the player's hotbar (above the on-screen inventory slots).
 There are currently 3 stats (with the option to easily add new skills):
