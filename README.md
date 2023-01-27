@@ -28,10 +28,10 @@ Currently the only implementations of vanilla leveling is for the Strength skill
 
 
 ## Commands
-The plugins has two commands available:
-/attrSet [player_name] [attribute_name] [attribute_level] - Set the level of a player's skill. (Requires permission "setAttr.use_command")
-/sendLevels player_name health/strength/armor levels_amount - Send some of your hard-earned levels to another player. (Requires permission "sendLevels.use_command")
-/attrStatus - Shows your levels, how much xp is needed for a level up and your general attribute stats. (Requires permission "attrStatus.use_command")
+The plugin has three commands available:
+- /attrSet [player_name] [attribute_name] [attribute_level] - Set the level of a player's skill. (Requires permission "setAttr.use_command")
+- /sendLevels player_name health/strength/armor levels_amount - Send some of your hard-earned levels to another player. (Requires permission "sendLevels.use_command")
+- /attrStatus - Shows your levels, how much xp is needed for a level up and your general attribute stats. (Requires permission "attrStatus.use_command")
 
 ## Current Limitations
 - Currently, the only level that players can level up is Strength (by killing other players). 
