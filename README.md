@@ -18,11 +18,12 @@ The class for managing player files is under Stats/StatsManager.java.
 
 #### Tasks
 Due to a limitation of Minecraft, we cannot set permanent hotbar text, this means each player's hotbar needs to be updated every few seconds in order to prevent it from fading.
+
 The ActionBarTask.java class handles that and is called every tick (you can change the timing in the OnEnable file at the VortexAttributes class) *TODO add this option in the config.
 
 #### Attribute leveling
-I wanted the attributes to be vanilla based, meaning a player can level up without running any commands, just by playing.
-For this purpose I have implemented an EventListener under Events/StatsEvents.java, thanks to my custom methods, it is very easy to implement new ways to level up skills.
+I wanted the attributes to be vanilla based, meaning a player can level up without running any commands, just by playing. For this purpose I have implemented an EventListener under Events/StatsEvents.java, thanks to my custom methods, it is very easy to implement new ways to level up skills.
+
 Currently the only implementations of vanilla leveling is for the Strength skill, just due to a lack of time on my end :)
 
 
