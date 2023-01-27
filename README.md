@@ -13,8 +13,8 @@ This was a passion side project, due to a lack of time I don't think I'll ever f
 ## Code
 #### File Storage
 Currently each new player that logs into your server is assigned a stats file that is stored under Plugins/VortexAttributes. 
-The stat file is then loaded when the player's stats need to be updated. Stat files only work with UUIDs, to prevent players from losing their skills on every name change.
-The class for managing player files is under Stats/StatsManager.java.
+
+The stat file is loaded when the player's stats need to be updated. Stat files only work with UUIDs, to prevent players from losing their skills on every name change. The class for managing player files is under Stats/StatsManager.java.
 
 #### Tasks
 Due to a limitation of Minecraft, we cannot set permanent hotbar text, this means each player's hotbar needs to be updated every few seconds in order to prevent it from fading.
